@@ -9,7 +9,7 @@ API REST em **Java + Spring Boot** para controlar frota, clientes, reservas, loc
 ## Equipe
 
 | Integrante | Papel | Responsabilidade |
-| --- | --- |
+| --- | --- | --- |
 | BRUNO ROVANI MARCELINO | Autenticação e segurança | Login, usuários, JWT, permissões e configuração de segurança. |
 | BRUNO SCHIMIGUEL | Cadastro e gerenciamento da frota | Veículos, categorias, filiais e opcionais. |
 | RENAN GABRIEL PIECHONTCOSKI | Clientes e reservas | Clientes, habilitações, criação e cancelamento de reservas. |
