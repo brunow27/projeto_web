@@ -24,11 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Locação de veículo (RF09–RF12, RF15). Cobre todo o ciclo: reserva → retirada → devolução,
- * ou reserva → cancelamento. As regras de transição (RN05) ficam nos métodos da própria entidade.
- * As IllegalStateException serão trocadas pela BusinessException do @RestControllerAdvice na Etapa 2.
- */
+/** Locação de veículo (RF09–RF12, RF15). As transições de status (RN05) ficam nos métodos da entidade. */
 @Entity
 @Table(name = "locacoes")
 public class Locacao {
@@ -209,22 +205,14 @@ public class Locacao {
         return pagamentos;
     }
 
-    // ------------------------------------------------------------------
-    // Validação
-    // ------------------------------------------------------------------
-
     /** Devolução prevista deve ser posterior à retirada prevista. */
     @AssertTrue(message = "A devolução prevista deve ser posterior à retirada prevista")
     public boolean isPeriodoValido() {
         return retiradaPrevista == null || devolucaoPrevista == null || devolucaoPrevista.isAfter(retiradaPrevista);
     }
 
-    // ------------------------------------------------------------------
-    // Cálculos (RN03, RN04, RN06)
-    // ------------------------------------------------------------------
-
     /** Dias cobrados: períodos de 24h, arredondando para cima, mínimo de 1 diária. */
-    public static int calcularDias(LocalDateTime inicio, LocalDateTime fim) {
+    private static int calcularDias(LocalDateTime inicio, LocalDateTime fim) {
         long minutos = Duration.between(inicio, fim).toMinutes();
         return (int) Math.max(1, Math.ceil(minutos / 1440.0));
     }
@@ -260,10 +248,6 @@ public class Locacao {
         return total.subtract(pago);
     }
 
-    // ------------------------------------------------------------------
-    // Opcionais (N:M via entidade associativa)
-    // ------------------------------------------------------------------
-
     /** Adiciona um opcional congelando o valor/dia vigente no momento da reserva. */
     public LocacaoOpcional adicionarOpcional(Opcional opcional, int quantidade) {
         LocacaoOpcional item = new LocacaoOpcional();
@@ -274,10 +258,6 @@ public class Locacao {
         opcionais.add(item);
         return item;
     }
-
-    // ------------------------------------------------------------------
-    // Transições de status (RN05)
-    // ------------------------------------------------------------------
 
     /** True se a locação bloqueia o veículo no período (RN01). */
     public boolean ocupaPeriodo(LocalDateTime inicio, LocalDateTime fim) {

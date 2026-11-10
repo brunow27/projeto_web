@@ -231,7 +231,7 @@ class PersistenciaTest {
 
     @Test
     void veiculosDisponiveis_excluiLocadosEEmManutencao() {
-        Veiculo livre = novoVeiculo("FFF6F66");
+        novoVeiculo("FFF6F66");
         Veiculo locado = novoVeiculo("GGG7G77");
         Veiculo emManutencao = novoVeiculo("HHH8H88");
         Veiculo inativo = novoVeiculo("III9I99");
@@ -252,7 +252,6 @@ class PersistenciaTest {
 
         assertThat(pagina.getContent()).extracting(Veiculo::getPlaca).containsExactly("FFF6F66");
         assertThat(pagina.getTotalElements()).isEqualTo(1);
-        assertThat(livre.getId()).isNotNull();
     }
 
     @Test

@@ -13,10 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * Usuário do sistema (RF01/RF02). A senha é armazenada apenas como hash BCrypt.
- * O método autenticar() do diagrama UML será implementado no AuthService (Etapa 2).
- */
+/** Usuário do sistema (RF01/RF02). A senha é armazenada apenas como hash BCrypt. */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
