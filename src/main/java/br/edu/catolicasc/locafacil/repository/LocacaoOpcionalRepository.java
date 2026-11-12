@@ -7,4 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LocacaoOpcionalRepository extends JpaRepository<LocacaoOpcional, Long> {
 
     List<LocacaoOpcional> findByLocacaoId(Long locacaoId);
+
+    /** RF08: impede remover opcional já usado em locações. */
+    boolean existsByOpcionalId(Long opcionalId);
 }

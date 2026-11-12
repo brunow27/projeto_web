@@ -22,6 +22,9 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
     /** RF05: impede remover filial que ainda possui veículos. */
     boolean existsByFilialId(Long filialId);
 
+    /** RF04: impede remover categoria que ainda possui veículos. */
+    boolean existsByCategoriaId(Long categoriaId);
+
     /**
      * RF07 / RN01: veículos ativos livres no período (sem locação RESERVADA/ATIVA e sem
      * manutenção que cruze o período). Filtros opcionais: passe null para ignorar.
