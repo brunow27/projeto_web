@@ -3,6 +3,7 @@ package br.edu.catolicasc.locafacil.repository;
 import br.edu.catolicasc.locafacil.entity.Locacao;
 import br.edu.catolicasc.locafacil.entity.StatusLocacao;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -18,6 +19,8 @@ public interface LocacaoRepository extends JpaRepository<Locacao, Long> {
     List<Locacao> findByClienteId(Long clienteId);
 
     List<Locacao> findByStatus(StatusLocacao status);
+
+    boolean existsByVeiculoIdAndStatusIn(Long veiculoId, Collection<StatusLocacao> status);
 
     /** RF05: impede remover filial com locações associadas. */
     boolean existsByFilialRetiradaIdOrFilialDevolucaoId(Long filialRetiradaId, Long filialDevolucaoId);
