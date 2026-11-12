@@ -406,7 +406,7 @@ Com a aplicação no ar: API em `http://localhost:8080` e documentação em `htt
 
 - [x] Tratamento de erros padronizado (`@RestControllerAdvice`)
 - [x] CRUD de categorias, filiais e opcionais (RF04, RF05, RF08)
-- [ ] Veículos, manutenções e consulta de disponibilidade (RF06, RF07, RF14)
+- [x] Veículos, manutenções e consulta de disponibilidade (RF06, RF07, RF14)
 - [ ] Clientes e usuários (RF02, RF03)
 - [ ] Locações e pagamentos (RF09–RF13, RF15)
 - [ ] Segurança: JWT, BCrypt e autorização por perfil (RF01, RNF05, RNF06)
