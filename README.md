@@ -3,8 +3,8 @@
 Projeto Final da disciplina **Programação Web** (foco em Backend) — Centro Universitário Católica de Santa Catarina.
 API REST em **Java + Spring Boot** para controlar frota, clientes, reservas, locações e pagamentos de uma locadora de carros.
 
-> **Status:** Etapa 1 (requisitos, modelagem e camada de persistência) — entrega em **26/10/2026, 23h59**.
-> Etapa 2 (6 pts) — 23/11 · Entrega final — 30/11.
+> **Status:** Etapa 1 (requisitos, modelagem e camada de persistência) concluída.
+> Etapa 2 (API REST, regras de negócio e segurança — 6 pts) em andamento — 23/11 · Entrega final — 30/11.
 
 ## Equipe
 
@@ -331,8 +331,6 @@ classDiagram
 
 ## 9. Estrutura do projeto
 
-> Estrutura planejada; será preenchida conforme o código for adicionado.
-
 ```
 projeto_web/
 ├── pom.xml
@@ -349,31 +347,38 @@ projeto_web/
     │   │   ├── repository/      # JpaRepository
     │   │   └── service/
     │   └── resources/
-    │       └── application.properties
-    └── test/java/...
+    │       ├── application.properties           # H2 em memória (padrão)
+    │       └── application-postgres.properties  # perfil PostgreSQL
+    └── test/java/                               # PersistenciaTest, testes de service e controller
 ```
 
 ## 10. Como executar
 
-Pré-requisitos: **JDK 17**, **Maven 3.9+** e **PostgreSQL 14+** (ou usar o perfil de testes com H2).
+Pré-requisitos: **JDK 17 ou superior** (testado com 21) e **Maven 3.9+**. O **PostgreSQL 14+** só é necessário no perfil `postgres`; sem ele a aplicação sobe com H2 em memória.
 
 ```bash
 # 1. clonar
 git clone https://github.com/brunow27/projeto_web.git
 cd projeto_web
 
-# 2. variáveis de ambiente
+# 2. executar com H2 em memória (console em /h2-console)
+mvn spring-boot:run
+
+# 3. testes
+mvn test
+```
+
+Para usar o PostgreSQL, defina as variáveis de ambiente e ative o perfil `postgres`:
+
+```bash
 export DB_URL=jdbc:postgresql://localhost:5432/locafacil
 export DB_USER=postgres
 export DB_PASSWORD=postgres
-export JWT_SECRET=troque-por-uma-chave-longa-e-secreta
-
-# 3. executar
-./mvnw spring-boot:run
-
-# 4. testes
-./mvnw test
+export JWT_SECRET=troque-por-uma-chave-longa-e-secreta   # usada a partir da etapa de segurança
+mvn spring-boot:run -Dspring-boot.run.profiles=postgres
 ```
+
+No PowerShell, use `$env:DB_URL="..."` para as variáveis e aspas no parâmetro: `mvn spring-boot:run "-Dspring-boot.run.profiles=postgres"`.
 
 Com a aplicação no ar: API em `http://localhost:8080` e documentação em `http://localhost:8080/swagger-ui.html`.
 
@@ -390,9 +395,19 @@ Com a aplicação no ar: API em `http://localhost:8080` e documentação em `htt
 
 **Checklist da Etapa 1**
 
-- [ ] Documento de concepção e requisitos (seções 1 a 3 do template)
-- [ ] Diagrama de classes UML com tipos, métodos, relacionamentos e cardinalidades
-- [ ] Mínimo de 5 entidades `@Entity` com relacionamentos mapeados
-- [ ] Repositórios `JpaRepository`
-- [ ] Matriz de rastreabilidade RF × endpoints × entidades
+- [x] Documento de concepção e requisitos (seções 1 a 3 do template)
+- [x] Diagrama de classes UML com tipos, métodos, relacionamentos e cardinalidades
+- [x] Mínimo de 5 entidades `@Entity` com relacionamentos mapeados (11 entidades)
+- [x] Repositórios `JpaRepository` (11 repositórios + `PersistenciaTest`)
+- [x] Matriz de rastreabilidade RF × endpoints × entidades
 - [ ] Link do repositório e identificação da equipe enviados pelo líder
+
+**Checklist da Etapa 2**
+
+- [x] Tratamento de erros padronizado (`@RestControllerAdvice`)
+- [x] CRUD de categorias, filiais e opcionais (RF04, RF05, RF08)
+- [ ] Veículos, manutenções e consulta de disponibilidade (RF06, RF07, RF14)
+- [ ] Clientes e usuários (RF02, RF03)
+- [ ] Locações e pagamentos (RF09–RF13, RF15)
+- [ ] Segurança: JWT, BCrypt e autorização por perfil (RF01, RNF05, RNF06)
+- [ ] Documentação OpenAPI/Swagger (RNF10)
