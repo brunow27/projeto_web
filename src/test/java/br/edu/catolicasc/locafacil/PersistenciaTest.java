@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,6 +319,29 @@ class PersistenciaTest {
     void somaDePagamentos_semPagamentosRetornaZero() {
         Locacao l = novaLocacao(novoVeiculo("NNN5N55"), INICIO, FIM);
         assertThat(pagamentos.somarPorLocacao(l.getId())).isEqualByComparingTo("0");
+    }
+
+    @Test
+    void listagemDeVeiculos_retornaSomenteAtivosComCategoriaCarregada() {
+        novoVeiculo("OOO6O66");
+        novoVeiculo("PPP7P77").setAtivo(false);
+        limparCache();
+
+        Page<Veiculo> pagina = veiculos.findByAtivoTrue(PageRequest.of(0, 10));
+
+        assertThat(pagina.getContent()).extracting(Veiculo::getPlaca).containsExactly("OOO6O66");
+        assertThat(Hibernate.isInitialized(pagina.getContent().get(0).getCategoria())).isTrue();
+    }
+
+    @Test
+    void locacaoReservadaOuAtiva_contaComoLocacaoEmAndamentoDoVeiculo() {
+        Veiculo v = novoVeiculo("QQQ8Q88");
+        Locacao l = novaLocacao(v, INICIO, FIM);
+        assertThat(locacoes.existsByVeiculoIdAndStatusIn(v.getId(), LocacaoRepository.STATUS_OCUPANTES)).isTrue();
+
+        l.cancelar("Cliente desistiu");
+
+        assertThat(locacoes.existsByVeiculoIdAndStatusIn(v.getId(), LocacaoRepository.STATUS_OCUPANTES)).isFalse();
     }
 
     Pagamento novoPagamento(Locacao l, String valor, TipoPagamento tipo, FormaPagamento forma) {
